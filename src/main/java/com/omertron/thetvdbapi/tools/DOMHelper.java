@@ -26,7 +26,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.ws.WebServiceException;
+
+import com.omertron.thetvdbapi.TheTVDBApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
@@ -82,7 +83,7 @@ public class DOMHelper {
      * @param url
      * @throws Exception
      */
-    public static synchronized Document getEventDocFromUrl(String url) throws WebServiceException {
+    public static synchronized Document getEventDocFromUrl(String url) throws TheTVDBApiException {
         String webPage = null;
         InputStream in = null;
         int retryCount = 0;     // Count the number of times we download the web page
@@ -105,14 +106,14 @@ public class DOMHelper {
 
             // Couldn't get a valid webPage so, quit.
             if (!valid) {
-                throw new WebServiceException("Failed to download data from " + url);
+                throw new TheTVDBApiException("Failed to download data from " + url);
             }
 
             in = new ByteArrayInputStream(webPage.getBytes(ENCODING));
         } catch (UnsupportedEncodingException error) {
-            throw new WebServiceException("Unable to encode URL: " + url, error);
+            throw new TheTVDBApiException("Unable to encode URL: " + url, error);
         } catch (IOException error) {
-            throw new WebServiceException("Unable to download URL: " + url, error);
+            throw new TheTVDBApiException("Unable to download URL: " + url, error);
         }
 
         Document doc = null;
@@ -124,11 +125,11 @@ public class DOMHelper {
             doc = db.parse(in);
             doc.getDocumentElement().normalize();
         } catch (ParserConfigurationException error) {
-            throw new WebServiceException("Unable to parse TheTVDb response, please try again later.", error);
+            throw new TheTVDBApiException("Unable to parse TheTVDb response, please try again later.", error);
         } catch (SAXException error) {
-            throw new WebServiceException("Unable to parse TheTVDb response, please try again later.", error);
+            throw new TheTVDBApiException("Unable to parse TheTVDb response, please try again later.", error);
         } catch (IOException error) {
-            throw new WebServiceException("Unable to parse TheTVDb response, please try again later.", error);
+            throw new TheTVDBApiException("Unable to parse TheTVDb response, please try again later.", error);
         } finally {
             if (in != null) {
                 try {

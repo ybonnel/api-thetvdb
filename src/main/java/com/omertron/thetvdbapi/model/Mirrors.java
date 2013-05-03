@@ -19,6 +19,7 @@
  */
 package com.omertron.thetvdbapi.model;
 
+import com.omertron.thetvdbapi.TheTVDBApiException;
 import com.omertron.thetvdbapi.tools.DOMHelper;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class Mirrors {
     private List<String> bannerList = new ArrayList<String>();
     private List<String> zipList = new ArrayList<String>();
 
-    public Mirrors(String apiKey) {
+    public Mirrors(String apiKey) throws TheTVDBApiException {
         // Make this synchronized so that only one
         synchronized (this) {
             String urlString = "http://www.thetvdb.com/api/" + apiKey + "/mirrors.xml";

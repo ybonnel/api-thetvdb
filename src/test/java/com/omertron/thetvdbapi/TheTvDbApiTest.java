@@ -74,56 +74,56 @@ public class TheTvDbApiTest {
     }
 
     @Test
-    public void testGetSeries() {
+    public void testGetSeries() throws TheTVDBApiException {
         LOG.info("testGetSeries");
         Series series = tvdb.getSeries(TVDBID, LANGUAGE_ENGLISH);
         assertTrue(series.getSeriesName().equals(SERIES_NAME));
     }
 
     @Test
-    public void testGetAllEpisodes() {
+    public void testGetAllEpisodes() throws TheTVDBApiException {
         LOG.info("testGetAllEpisodes");
         List<Episode> episodes = tvdb.getAllEpisodes(TVDBID, LANGUAGE_ENGLISH);
         assertFalse(episodes.isEmpty());
     }
 
     @Test
-    public void testGetSeasonEpisodes() {
+    public void testGetSeasonEpisodes() throws TheTVDBApiException {
         LOG.info("testGetSeasonEpisodes");
         List<Episode> episodes = tvdb.getSeasonEpisodes(TVDBID, 1, LANGUAGE_ENGLISH);
         assertFalse(episodes.isEmpty());
     }
 
     @Test
-    public void testGetEpisode() {
+    public void testGetEpisode() throws TheTVDBApiException {
         LOG.info("testGetEpisode");
         Episode episode = tvdb.getEpisode(TVDBID, 1, 1, LANGUAGE_ENGLISH);
         assertTrue(episode.getEpisodeName().length() > 0);
     }
 
     @Test
-    public void testGetDVDEpisode() {
+    public void testGetDVDEpisode() throws TheTVDBApiException {
         LOG.info("testGetDVDEpisode");
         Episode episode = tvdb.getDVDEpisode(TVDBID, 1, 1, LANGUAGE_ENGLISH);
         assertTrue(episode.getDvdEpisodeNumber().length() > 0);
     }
 
     @Test
-    public void testGetAbsoluteEpisode() {
+    public void testGetAbsoluteEpisode() throws TheTVDBApiException {
         LOG.info("testGetAbsoluteEpisode");
         Episode episode = tvdb.getAbsoluteEpisode(TVDBID, 1, LANGUAGE_ENGLISH);
         assertTrue(episode.getAbsoluteNumber().equals("1"));
     }
 
     @Test
-    public void testGetSeasonYear() {
+    public void testGetSeasonYear() throws TheTVDBApiException {
         LOG.info("testGetSeasonYear");
         String year = tvdb.getSeasonYear(TVDBID, 1, LANGUAGE_ENGLISH);
         assertTrue(year.equals(SEASON_YEAR));
     }
 
     @Test
-    public void testGetBanners() {
+    public void testGetBanners() throws TheTVDBApiException {
         LOG.info("testGetBanners");
         Banners banners = tvdb.getBanners("72023");
         assertFalse(banners.getFanartList().isEmpty());
@@ -133,14 +133,14 @@ public class TheTvDbApiTest {
     }
 
     @Test
-    public void testGetActors() {
+    public void testGetActors() throws TheTVDBApiException {
         LOG.info("testGetActors");
         List<Actor> actors = tvdb.getActors(TVDBID);
         assertFalse(actors.isEmpty());
     }
 
     @Test
-    public void testSearchSeries() {
+    public void testSearchSeries() throws TheTVDBApiException {
         LOG.info("testSearchSeries");
         List<Series> seriesList = tvdb.searchSeries(SERIES_NAME, LANGUAGE_ENGLISH);
         assertFalse(seriesList.isEmpty());
@@ -163,7 +163,7 @@ public class TheTvDbApiTest {
     }
 
     @Test
-    public void testGetBannerMirror() {
+    public void testGetBannerMirror() throws TheTVDBApiException {
         LOG.info("testGetBannerMirror");
         String mirror = TheTVDBApi.getBannerMirror(apiKey);
         assertTrue(mirror.length() > 0);
@@ -173,7 +173,7 @@ public class TheTvDbApiTest {
      * Test of getEpisodeById method, of class TheTVDBApi.
      */
     @Test
-    public void testGetEpisodeById() {
+    public void testGetEpisodeById() throws TheTVDBApiException {
         LOG.info("getEpisodeById");
         Episode result = tvdb.getEpisodeById(EPISODE_ID, LANGUAGE_ENGLISH);
         assertEquals(TVDBID, result.getSeriesId());

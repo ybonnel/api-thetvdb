@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.xml.ws.WebServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +67,7 @@ public class TheTVDBApi {
      *
      * @return True if everything is OK, false otherwise.
      */
-    private static void getMirrors(String apiKey) throws WebServiceException {
+    private static void getMirrors(String apiKey) throws TheTVDBApiException {
         // If we don't need to get the mirrors, then just return
         if (xmlMirror != null && bannerMirror != null) {
             return;
@@ -79,13 +78,13 @@ public class TheTVDBApi {
         bannerMirror = mirrors.getMirror(Mirrors.TYPE_BANNER);
 
         if (xmlMirror == null) {
-            throw new WebServiceException("There is a problem getting the xmlMirror data from TheTVDB, this means it is likely to be down.");
+            throw new TheTVDBApiException("There is a problem getting the xmlMirror data from TheTVDB, this means it is likely to be down.");
         } else {
             xmlMirror += "/api/";
         }
 
         if (bannerMirror == null) {
-            throw new WebServiceException("There is a problem getting the bannerMirror data from TheTVDB, this means it is likely to be down.");
+            throw new TheTVDBApiException("There is a problem getting the bannerMirror data from TheTVDB, this means it is likely to be down.");
         } else {
             bannerMirror += "/banners/";
         }
@@ -126,7 +125,7 @@ public class TheTVDBApi {
      * @param language
      *
      */
-    public Series getSeries(String id, String language) {
+    public Series getSeries(String id, String language) throws TheTVDBApiException {
         StringBuilder urlBuilder = new StringBuilder();
         try {
             urlBuilder.append(getXmlMirror(apiKey));
@@ -137,7 +136,7 @@ public class TheTVDBApi {
             if (language != null) {
                 urlBuilder.append(language).append(XML_EXTENSION);
             }
-        } catch (WebServiceException ex) {
+        } catch (TheTVDBApiException ex) {
             LOG.warn(ex.getMessage());
             return null;
         }
@@ -156,7 +155,7 @@ public class TheTVDBApi {
      * @param id
      * @param language
      */
-    public List<Episode> getAllEpisodes(String id, String language) {
+    public List<Episode> getAllEpisodes(String id, String language) throws TheTVDBApiException {
         if (!isValidNumber(id)) {
             return new ArrayList<Episode>();
         }
@@ -171,7 +170,7 @@ public class TheTVDBApi {
             if (language != null) {
                 urlBuilder.append(language).append(XML_EXTENSION);
             }
-        } catch (WebServiceException ex) {
+        } catch (TheTVDBApiException ex) {
             LOG.warn(ex.getMessage());
             return null;
         }
@@ -191,7 +190,7 @@ public class TheTVDBApi {
      * @param season
      * @param language
      */
-    public List<Episode> getSeasonEpisodes(String id, int season, String language) {
+    public List<Episode> getSeasonEpisodes(String id, int season, String language) throws TheTVDBApiException {
         StringBuilder urlBuilder = new StringBuilder();
         try {
             urlBuilder.append(getXmlMirror(apiKey));
@@ -202,7 +201,7 @@ public class TheTVDBApi {
             if (language != null) {
                 urlBuilder.append(language).append(XML_EXTENSION);
             }
-        } catch (WebServiceException ex) {
+        } catch (TheTVDBApiException ex) {
             LOG.warn(ex.getMessage());
             return null;
         }
@@ -223,7 +222,7 @@ public class TheTVDBApi {
      * @param episodeNbr
      * @param language
      */
-    public Episode getEpisode(String seriesId, int seasonNbr, int episodeNbr, String language) {
+    public Episode getEpisode(String seriesId, int seasonNbr, int episodeNbr, String language) throws TheTVDBApiException {
         if (!isValidNumber(seriesId) || !isValidNumber(seasonNbr) || !isValidNumber(episodeNbr)) {
             // Invalid number passed
             return new Episode();
@@ -243,7 +242,7 @@ public class TheTVDBApi {
             if (language != null) {
                 urlBuilder.append(language).append(XML_EXTENSION);
             }
-        } catch (WebServiceException ex) {
+        } catch (TheTVDBApiException ex) {
             LOG.warn(ex.getMessage());
             return new Episode();
         }
@@ -259,7 +258,7 @@ public class TheTVDBApi {
      * @param episodeNbr
      * @param language
      */
-    public Episode getDVDEpisode(String seriesId, int seasonNbr, int episodeNbr, String language) {
+    public Episode getDVDEpisode(String seriesId, int seasonNbr, int episodeNbr, String language) throws TheTVDBApiException {
         StringBuilder urlBuilder = new StringBuilder();
         try {
             urlBuilder.append(getXmlMirror(apiKey));
@@ -274,7 +273,7 @@ public class TheTVDBApi {
             if (language != null) {
                 urlBuilder.append(language).append(XML_EXTENSION);
             }
-        } catch (WebServiceException ex) {
+        } catch (TheTVDBApiException ex) {
             LOG.warn(ex.getMessage());
             return new Episode();
         }
@@ -289,7 +288,7 @@ public class TheTVDBApi {
      * @param episodeNbr
      * @param language
      */
-    public Episode getAbsoluteEpisode(String seriesId, int episodeNbr, String language) {
+    public Episode getAbsoluteEpisode(String seriesId, int episodeNbr, String language) throws TheTVDBApiException {
         StringBuilder urlBuilder = new StringBuilder();
         try {
             urlBuilder.append(getXmlMirror(apiKey));
@@ -302,7 +301,7 @@ public class TheTVDBApi {
             if (language != null) {
                 urlBuilder.append(language).append(XML_EXTENSION);
             }
-        } catch (WebServiceException ex) {
+        } catch (TheTVDBApiException ex) {
             LOG.warn(ex.getMessage());
             return new Episode();
         }
@@ -315,7 +314,7 @@ public class TheTVDBApi {
      *
      * @param id
      */
-    public String getSeasonYear(String id, int seasonNbr, String language) {
+    public String getSeasonYear(String id, int seasonNbr, String language) throws TheTVDBApiException {
         String year = null;
 
         Episode episode = getEpisode(id, seasonNbr, 1, language);
@@ -339,7 +338,7 @@ public class TheTVDBApi {
         return year;
     }
 
-    public Banners getBanners(String seriesId) {
+    public Banners getBanners(String seriesId) throws TheTVDBApiException {
         StringBuilder urlBuilder = new StringBuilder();
         try {
             urlBuilder.append(getXmlMirror(apiKey));
@@ -347,7 +346,7 @@ public class TheTVDBApi {
             urlBuilder.append(SERIES_URL);
             urlBuilder.append(seriesId);
             urlBuilder.append("/banners.xml");
-        } catch (WebServiceException ex) {
+        } catch (TheTVDBApiException ex) {
             LOG.warn(ex.getMessage());
             return new Banners();
         }
@@ -360,7 +359,7 @@ public class TheTVDBApi {
      *
      * @param seriesId
      */
-    public List<Actor> getActors(String seriesId) {
+    public List<Actor> getActors(String seriesId) throws TheTVDBApiException {
         StringBuilder urlBuilder = new StringBuilder();
         try {
             urlBuilder.append(getXmlMirror(apiKey));
@@ -368,14 +367,14 @@ public class TheTVDBApi {
             urlBuilder.append(SERIES_URL);
             urlBuilder.append(seriesId);
             urlBuilder.append("/actors.xml");
-        } catch (WebServiceException ex) {
+        } catch (TheTVDBApiException ex) {
             LOG.warn(ex.getMessage());
             return new ArrayList<Actor>();
         }
         return TvdbParser.getActors(urlBuilder.toString(), getBannerMirror(apiKey));
     }
 
-    public List<Series> searchSeries(String title, String language) {
+    public List<Series> searchSeries(String title, String language) throws TheTVDBApiException {
         StringBuilder urlBuilder = new StringBuilder();
 
         try {
@@ -388,7 +387,7 @@ public class TheTVDBApi {
         } catch (UnsupportedEncodingException e) {
             // Try and use the raw title
             urlBuilder.append(title);
-        } catch (WebServiceException ex) {
+        } catch (TheTVDBApiException ex) {
             LOG.warn(ex.getMessage());
             return new ArrayList<Series>();
         }
@@ -402,7 +401,7 @@ public class TheTVDBApi {
      * @param episodeId
      * @param language
      */
-    public Episode getEpisodeById(String episodeId, String language) {
+    public Episode getEpisodeById(String episodeId, String language) throws TheTVDBApiException {
         StringBuilder urlBuilder = new StringBuilder();
 
         try {
@@ -415,7 +414,7 @@ public class TheTVDBApi {
                 urlBuilder.append(language);
                 urlBuilder.append(XML_EXTENSION);
             }
-        } catch (WebServiceException ex) {
+        } catch (TheTVDBApiException ex) {
             LOG.warn(ex.getMessage());
             return new Episode();
         }
@@ -423,7 +422,7 @@ public class TheTVDBApi {
         return TvdbParser.getEpisode(urlBuilder.toString(), getBannerMirror(apiKey));
     }
 
-    public TVDBUpdates getWeeklyUpdates() {
+    public TVDBUpdates getWeeklyUpdates() throws TheTVDBApiException {
         StringBuilder urlBuilder = new StringBuilder();
 
         urlBuilder.append(getXmlMirror(apiKey));
@@ -438,7 +437,7 @@ public class TheTVDBApi {
      * Get the XML Mirror URL
      *
      */
-    public static String getXmlMirror(String apiKey) {
+    public static String getXmlMirror(String apiKey) throws TheTVDBApiException {
         // Force a load of the mirror information if it doesn't exist
         getMirrors(apiKey);
         return xmlMirror;
@@ -448,7 +447,7 @@ public class TheTVDBApi {
      * Get the Banner Mirror URL
      *
      */
-    public static String getBannerMirror(String apiKey) {
+    public static String getBannerMirror(String apiKey) throws TheTVDBApiException {
         // Force a load of the mirror information if it doesn't exist
         getMirrors(apiKey);
         return bannerMirror;
